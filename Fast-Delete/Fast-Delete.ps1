@@ -6,8 +6,9 @@ EMAIL: angelo.yin@gmail.com
 
 .DESCRIPTION
 In order to resolve to delete big data on windows.
-When to delete big data with mounts of files on windows in explorer, explorer will
-be hanging up and speed is slow. Whole windows will be slowed down.
+When to delete big data with mounts of files on windows in explorer,
+explorer will be hanging up and speed is slow. Whole windows
+will be slowed down.
 
 .NOTES
 DONE: Remove-Item : The specified path, file name, or both are too long. The fully qualified file name must be less than 260
@@ -49,13 +50,13 @@ param($path = $null)
 
 $ErrorActionPreference = "Stop"
 
+$ErrorMark = "The specified path, file name, or both are too long"
 function Remove-Path($path)
 {
 	try {
 		Remove-Item -Path "$path" -Recurse -Force
 	} catch {
-		if (($_ | Out-String).Contains(
-			"The specified path, file name, or both are too long")) {
+		if (($_ | Out-String).Contains($ErrorMark)) {
 			Write-Host $_ -Foreground Red
 			Write-Host "********************"
 			Write-Warning "Change to use Cmd /C rmdir /S /Q <path>"
@@ -87,11 +88,11 @@ $options = [System.Management.Automation.Host.ChoiceDescription[]]($yes, $no)
 $result = $host.ui.PromptForChoice($title, $message, $options, $defaultOption)
 
 switch ($result) {
-	0 {
-		Write-Host "Deleting $path..."
-		Measure-Command {Remove-Path $path}
+0 {
+	Write-Host "Deleting $path..."
+	Measure-Command {Remove-Path $path}
 	}
-	1 {
-		Write-Host "Delete action is canceled."
+1 {
+	Write-Host "Delete action is canceled."
 	}
 }

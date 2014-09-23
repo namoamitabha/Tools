@@ -56,45 +56,45 @@ http://blogs.technet.com/b/askperf/archive/2007/05/08/slow-large-file-copy-issue
 #>
 
 param(
-    [Parameter(Mandatory = $true, Position = 1)]
-    [string]$SrcPath, 
-    [Parameter(Mandatory = $true, Position = 2)]
-    [string]$DestPath,
-    [switch]$BigData) # by default is robocopy but use xcopy for big data
+	[Parameter(Mandatory = $true, Position = 1)]
+	[string]$SrcPath,
+	[Parameter(Mandatory = $true, Position = 2)]
+	[string]$DestPath,
+	[switch]$BigData)
 
 if (-not (Test-Path $SrcPath)) {
-    throw "Src path: $SrcPath does not exist!"
+	throw "Src path: $SrcPath does not exist!"
 }
 
 if (-not (Test-Path $DestPath)) {
-    Write-Warning "Destination path: $DestPath does not exist!"
-    Write-Host "Create Destination path: $DestPath."
-    mkdir $DestPath
+	Write-Warning "Destination path: $DestPath does not exist!"
+	Write-Host "Create Destination path: $DestPath."
+	mkdir $DestPath
 }
 
 function Do-Robocopy ($src, $dest) {
-    Write-Host "Start to do robocopy"
-    $args = "$SrcPath $DestPath /E /ZB /MT /COPYALL /R:10 /V /PF /FP /ETA /TEE /LOG:" + (Get-LogName)
-    Start-Process "robocopy" $args -Wait
-    Write-Host "End to do robocopy"
-        
+	Write-Host "Start to do robocopy"
+	$args = "$SrcPath $DestPath /E /ZB /MT /COPYALL `
+		/R:10 /V /PF /FP /ETA /TEE /LOG:" + (Get-LogName)
+	Start-Process "robocopy" $args -Wait
+	Write-Host "End to do robocopy"
 }
 
 function Get-LogName
 {
-        $logName = (Get-Date  -UFormat "%Y%m%d-%H-%M-%S")
-        return $logName + ".txt"
+	$logName = (Get-Date  -UFormat "%Y%m%d-%H-%M-%S")
+	return $logName + ".txt"
 }
 
 function Do-XCopy ($src, $dest) {
-    Write-Host "Start XCopy from $src to $dest"
-    $args = "$src $dest /E /V /F /Y /Z /J"
-    Start-Process "XCopy" $args -Wait -RedirectStandardOutput (Get-LogName)
-    Write-Host "End XCopy"
+	Write-Host "Start XCopy from $src to $dest"
+	$args = "$src $dest /E /V /F /Y /Z /J"
+	Start-Process "XCopy" $args -Wait -RedirectStandardOutput (Get-LogName)
+	Write-Host "End XCopy"
 }
 
 if($BigData) {
-        Do-XCopy $SrcPath $DestPath
+	Do-XCopy $SrcPath $DestPath
 } else {
-        Do-Robocopy $SrcPath $DestPath
+	Do-Robocopy $SrcPath $DestPath
 }

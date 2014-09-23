@@ -51,8 +51,10 @@ XCOPY parameter using:
 http://blogs.technet.com/b/askperf/archive/2007/05/08/slow-large-file-copy-issues.aspx
 
 .EXAMPLE
+.\Fast-Copy.ps1 -BigData D:\tmp D:\tmp2
 
 .EXAMPLE
+.\Fast-Copy.ps1 D:\tmp D:\tmp2
 #>
 
 param(
@@ -62,8 +64,9 @@ param(
 	[String]$DestPath,
 	[Switch]$BigData)
 
-if (-not (Test-Path $SrcPath))
+if (-not (Test-Path $SrcPath)) {
 	throw "Src path: $SrcPath does not exist!"
+}
 
 if (-not (Test-Path $DestPath)) {
 	Write-Warning "Destination path: $DestPath does not exist!"
@@ -79,8 +82,9 @@ function Get-LogName
 
 function Do-Robocopy ($src, $dest) {
 	Write-Host "Start to do robocopy"
-	$args = "$SrcPath $DestPath /E /ZB /MT /COPYALL `
-		/R:10 /V /PF /FP /ETA /TEE /LOG:" + (Get-LogName)
+	$args = "$SrcPath $DestPath " +
+		"/E /ZB /MT /COPYALL /R:10 /V /PF /FP /ETA /TEE /LOG:" +
+		(Get-LogName)
 	Start-Process "robocopy" $args -Wait
 	Write-Host "End to do robocopy"
 }
@@ -93,8 +97,8 @@ function Do-XCopy ($src, $dest) {
 	Write-Host "End XCopy"
 }
 
-if($BigData) {
-	Do-XCopy $SrcPath $DestPath
-} else {
+if ($BigData) {
 	Do-Robocopy $SrcPath $DestPath
+} else {
+	Do-XCopy $SrcPath $DestPath
 }

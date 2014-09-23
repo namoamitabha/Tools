@@ -57,19 +57,24 @@ http://blogs.technet.com/b/askperf/archive/2007/05/08/slow-large-file-copy-issue
 
 param(
 	[Parameter(Mandatory = $true, Position = 1)]
-	[string]$SrcPath,
+	[String]$SrcPath,
 	[Parameter(Mandatory = $true, Position = 2)]
-	[string]$DestPath,
-	[switch]$BigData)
+	[String]$DestPath,
+	[Switch]$BigData)
 
-if (-not (Test-Path $SrcPath)) {
+if (-not (Test-Path $SrcPath))
 	throw "Src path: $SrcPath does not exist!"
-}
 
 if (-not (Test-Path $DestPath)) {
 	Write-Warning "Destination path: $DestPath does not exist!"
 	Write-Host "Create Destination path: $DestPath."
 	mkdir $DestPath
+}
+
+function Get-LogName
+{
+	$logName = (Get-Date  -UFormat "%Y%m%d-%H-%M-%S")
+	return $logName + ".txt"
 }
 
 function Do-Robocopy ($src, $dest) {
@@ -80,11 +85,6 @@ function Do-Robocopy ($src, $dest) {
 	Write-Host "End to do robocopy"
 }
 
-function Get-LogName
-{
-	$logName = (Get-Date  -UFormat "%Y%m%d-%H-%M-%S")
-	return $logName + ".txt"
-}
 
 function Do-XCopy ($src, $dest) {
 	Write-Host "Start XCopy from $src to $dest"

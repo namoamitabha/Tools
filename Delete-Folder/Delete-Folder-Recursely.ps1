@@ -1,3 +1,16 @@
+<#
+.SYNOPSIS
+	Delete-BigData
+.DESCRIPTION
+
+.NOTES
+
+.LINK
+
+.EXAMPLE
+
+.EXAMPLE
+#>
 param($path = $null)
 
 $ErrorActionPreference = "Stop"

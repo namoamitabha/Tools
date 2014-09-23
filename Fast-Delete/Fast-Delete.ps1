@@ -26,8 +26,7 @@ At D:\Tools\Delete-Folder-Recursely.ps1:27 char:20
     + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
     + FullyQualifiedErrorId : ComMethodTargetInvocation
 
-##########
-Ref:
+.LINK
 http://social.technet.microsoft.com/Forums/windowsserver/en-US/14089f8a-65eb-4c31-8d87-2485963bda2b/quickly-delete-large-folders-with-ps?forum=winserverpowershell
 
 cls
@@ -40,11 +39,10 @@ Measure-Command {$fso.DeleteFolder("\\<Server>\Home$\DelTest2",$true)}
 
 Write-Host "Method 3: Use .NET classes"
 Measure-Command {dir "\\<Server>\Home$\DelTest3*" | foreach { [io.directory]::delete($_.fullname,$true) }}
-.LINK
 
 .EXAMPLE
+ .\Fast-Delete.ps1 D:\tmp2
 
-.EXAMPLE
 #>
 param($path = $null)
 

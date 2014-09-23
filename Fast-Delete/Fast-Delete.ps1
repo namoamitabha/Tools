@@ -10,38 +10,35 @@ When to delete big data with mounts of files on windows in explorer, explorer wi
 be hanging up and speed is slow. Whole windows will be slowed down.
 
 .NOTES
-# DONE: Remove-Item : The specified path, file name, or both are too long. The fully qualified file name must be less than 260
-# Solution:
-# ref: http://superuser.com/questions/78434/tool-for-deleting-directories-with-path-names-too-long-for-normal-delete
-# rmdir /S /Q <dir>
-# ref: http://social.technet.microsoft.com/wiki/contents/articles/12179.net-powershell-path-too-long-exception-and-a-net-powershell-robocopy-clone.aspx
-# ref: http://blogs.msdn.com/b/kebab/archive/2013/06/09/an-introduction-to-error-handling-in-powershell.aspx
+DONE: Remove-Item : The specified path, file name, or both are too long. The fully qualified file name must be less than 260
+Solution:
+ref: http://superuser.com/questions/78434/tool-for-deleting-directories-with-path-names-too-long-for-normal-delete
+rmdir /S /Q <dir>
+ref: http://social.technet.microsoft.com/wiki/contents/articles/12179.net-powershell-path-too-long-exception-and-a-net-powershell-robocopy-clone.aspx
+ref: http://blogs.msdn.com/b/kebab/archive/2013/06/09/an-introduction-to-error-handling-in-powershell.aspx
 
-#**************************************************
-#issue
-#DONE: change default selection to false, not true
+##########
+TODO: Exception calling "DeleteFolder" with "2" argument(s): "Exception from HRESULT: 0x800A004C (CTL_E_PATHNOTFOUND)"
+At D:\Tools\Delete-Folder-Recursely.ps1:27 char:20
++         Measure-Command {$fso.DeleteFolder($path,$true)}
++                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : ComMethodTargetInvocation
 
-#**************************************************
-# TODO: Exception calling "DeleteFolder" with "2" argument(s): "Exception from HRESULT: 0x800A004C (CTL_E_PATHNOTFOUND)"
-# At D:\Tools\Delete-Folder-Recursely.ps1:27 char:20
-# +         Measure-Command {$fso.DeleteFolder($path,$true)}
-# +                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#     + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
-#     + FullyQualifiedErrorId : ComMethodTargetInvocation
+##########
+Ref:
+http://social.technet.microsoft.com/Forums/windowsserver/en-US/14089f8a-65eb-4c31-8d87-2485963bda2b/quickly-delete-large-folders-with-ps?forum=winserverpowershell
 
-#**************************************************
-# Ref:
-# http://social.technet.microsoft.com/Forums/windowsserver/en-US/14089f8a-65eb-4c31-8d87-2485963bda2b/quickly-delete-large-folders-with-ps?forum=winserverpowershell
-# cls
-# Write-Host "Method 1: Use native cmdlets"
-# Measure-Command {Remove-Item -Path "\\<Server>\Home$\DelTest1" -Recurse -Force}
+cls
+Write-Host "Method 1: Use native cmdlets"
+Measure-Command {Remove-Item -Path "\\<Server>\Home$\DelTest1" -Recurse -Force}
 
-# Write-Host "Method 2: FileSystemObject still works"
-# $fso = New-Object -ComObject scripting.filesystemobject
-# Measure-Command {$fso.DeleteFolder("\\<Server>\Home$\DelTest2",$true)}
+Write-Host "Method 2: FileSystemObject still works"
+$fso = New-Object -ComObject scripting.filesystemobject
+Measure-Command {$fso.DeleteFolder("\\<Server>\Home$\DelTest2",$true)}
 
-# Write-Host "Method 3: Use .NET classes"
-# Measure-Command {dir "\\<Server>\Home$\DelTest3*" | foreach { [io.directory]::delete($_.fullname,$true) }}
+Write-Host "Method 3: Use .NET classes"
+Measure-Command {dir "\\<Server>\Home$\DelTest3*" | foreach { [io.directory]::delete($_.fullname,$true) }}
 .LINK
 
 .EXAMPLE

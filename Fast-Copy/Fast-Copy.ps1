@@ -1,12 +1,15 @@
 <#
 .SYNOPSIS
-	Fast-Copy is to resolve big data copy on windows.
+	Fast-Copy is to resolve large data copy on windows.
+	Auther: Angelo Yin
+	Email: angelo.yin@gmail.com
 .DESCRIPTION
 	We usually do Hyper-V VM data copy from one serve to another. But data
-is to T size. It is not good to use manual copy. It is not trackable and
-explorer is always hanging up. Also for copy mount of files in small size.
+is to T size. It is not good to use manual copy in explorer. It is not
+trackable and explorer is always hanging up. Also for copy a mount of
+files in small size.
 
-BigData when data > 1G, we d better use it
+BigData when data > 10G, we d better use it
 
 Requirements:
 	1. Better performance
@@ -76,7 +79,7 @@ if (-not (Test-Path $DestPath)) {
 
 function Get-LogName
 {
-	$logName = (Get-Date  -UFormat "%Y%m%d-%H-%M-%S")
+	$logName = "Fast-Copy-" + (Get-Date  -UFormat "%Y%m%d-%H%M%S")
 	return $logName + ".txt"
 }
 
@@ -88,7 +91,6 @@ function Do-Robocopy ($src, $dest) {
 	Start-Process "robocopy" $args -Wait
 	Write-Host "End to do robocopy"
 }
-
 
 function Do-XCopy ($src, $dest) {
 	Write-Host "Start XCopy from $src to $dest"
